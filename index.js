@@ -42,7 +42,7 @@ app.get("/api/users/:id", (req, res) => {
     const userId = req.params.id;
 
     const numberUserId = parseInt(userId);
-    console.log(numberUserId);
+    // console.log(numberUserId);
     if(isNaN(userId)) {
         return res.status(400).json({message: "I am expecting an integer"});
     }
@@ -200,7 +200,7 @@ app.get("/api/properties/:id", (req, res) => {
     const propertyId = req.params.id;
 
     const numberPropertyId = parseInt(propertyId);
-    console.log(numberPropertyId);
+    // console.log(numberPropertyId);
     if(isNaN(propertyId)) {
         return res.status(400).json({message: "I am expecting an integer"});
     }
@@ -223,7 +223,7 @@ app.delete("/api/properties/:id", (req, res) => {
     const propertyId = req.params.id;
 
     const numberPropertyId = parseInt(propertyId);
-    console.log(numberPropertyId);
+    // console.log(numberPropertyId);
     if(isNaN(propertyId)) {
         return res.status(400).json({message: "I am expecting an integer"});
     }
@@ -234,7 +234,7 @@ app.delete("/api/properties/:id", (req, res) => {
     for (var k = 0; k < properties.length; k++) {
         const delProperty = properties[k];
         if (delProperty.id == propertyId) {
-            properties.splice(delProperty.id - 1, 1)
+            properties.splice(k, 1)
             return res.status(200).json({message: "Property deleted"});
         }
     }
@@ -267,25 +267,19 @@ app.post("/api/properties/:id/bookings", (req, res) => {
         return res.status(400).json({errorMessages: errors});
     }
 
-    // if (!propertyId) {
-    //     return res.status(400).json({message: "Please pass in a propertyId"});
-    // }
-    // for (var k = 0; k < properties.length; k++) {
-    //     const bookProperty = properties[k];
-    //     if (bookProperty.id !== propertyId) {
-    //         return res.status(404).json({message: "Property not found"});
-    //     }
-    // }
-
-    // let foundProperty = null;
-    // properties.forEach((bookProperty) => {
-    //     if (bookProperty.id === propertyId) {
-    //         foundProperty = bookProperty;
-    //     }
-    // });
-    // if (foundProperty != null) {
-    //     return res.status(200).json({message: "Property not found"});
-    // }
+    if (!propertyId) {
+        return res.status(400).json({message: "Please pass in a propertyId"});
+    }
+    let foundProperty = null;
+    for (var k = 0; k < properties.length; k++) {
+        const bookProperty = properties[k];
+        if (bookProperty.id == propertyId) {
+            foundProperty = bookProperty;
+        }
+    }
+    if (!foundProperty) {
+        return res.status(404).json({message: "Property not found"});
+    }
 
     var newBooking = {
         id: bookings.length + 1,
@@ -307,7 +301,7 @@ app.get("/api/properties/:id/bookings", (req, res) => {
     const bookPropertyId = req.params.id;
 
     const numberBookPropertyId = parseInt(bookPropertyId);
-    console.log(numberBookPropertyId);
+    // console.log(numberBookPropertyId);
     if(isNaN(bookPropertyId)) {
         return res.status(400).json({message: "I am expecting an integer"});
     }
