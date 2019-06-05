@@ -298,25 +298,42 @@ app.post("/api/properties/:id/bookings", (req, res) => {
 
 // 7. find property booking by ID at GET api/properties/:id/bookings
 app.get("/api/properties/:id/bookings", (req, res) => {
-    const bookPropertyId = req.params.id;
+    // const bookPropertyId = req.params.id;
+    const propertyId = req.params.id;
+    // const bodyPropertyId = req.params.id;
+    var specificBookings = [];
 
-    const numberBookPropertyId = parseInt(bookPropertyId);
-    // console.log(numberBookPropertyId);
-    if(isNaN(bookPropertyId)) {
+    const numberPropertyId = parseInt(propertyId);
+    // console.log(propertyId);
+    if(isNaN(propertyId)) {
         return res.status(400).json({message: "I am expecting an integer"});
     }
 
-    if (!bookPropertyId) {
+    if (!propertyId) {
         return res.status(400).json({message: "Please pass in a booking propertyId"});
     }
+// this code will push only the bookings for this property to a new array called specificBookings
+    if (bookings.length > 0) {
+        foundBooking = null;
+        bookings.forEach(existingBooking => {
+            if (existingBooking.propertyId == propertyId) {
+                foundBooking = true;
+                specificBookings.push(existingBooking);
+            }
+        });
+    }
+// this code will match up the property ID with the bookings under that property and return them as an array
+    let foundProperty = null;
     for (var k = 0; k < bookings.length; k++) {
         const bookProperty = bookings[k];
-        if (bookProperty.id == bookPropertyId) {
-            return res.status(200).json(bookProperty);
+        if (bookProperty.propertyId == propertyId) {
+            foundProperty = bookProperty;
+            return res.status(200).json({specificBookings});
         }
     }
-
-    return res.status(404).json({message: "Booking of property not found"});
+    if (!foundProperty) {
+    return res.status(404).json({message: "Bookings not found under this property"});
+    }
 });
 
 const PropertyRouter = express.Router();
