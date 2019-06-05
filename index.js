@@ -19,6 +19,8 @@ var users = new Array();
 var properties = new Array();
 var bookings = new Array();
 
+var mysqlConn = require("./db");
+
 app.post("/read/file", (req, res) => {
     fs.readFile("./data/file.json", function(err, data) {
         if (err) {
@@ -121,8 +123,8 @@ app.post("/api/users", (req, res) => {
     res.json(newUser);
 });
 
-// 2. to verify a user login at POST api/users/authentification
-app.post("/api/users/authentification", (req, res) => {
+// 2. to verify a user login at POST api/users/authentication
+app.post("/api/users/authentication", (req, res) => {
     const user = req.body;
     const bodyEmail = user.email;
     const bodyPassword = user.password;
